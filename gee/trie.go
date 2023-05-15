@@ -3,7 +3,7 @@ package gee
 import "strings"
 
 type node struct {
-	parttern string
+	pattern string
 	part     string
 	children []*node
 	isWild   bool
@@ -30,7 +30,7 @@ func (n *node) matchChildren(part string) []*node {
 
 func (n *node) insert(parttern string, parts []string, height int) {
 	if len(parts) == height {
-		n.parttern = parttern
+		n.pattern = parttern
 		return
 	}
 
@@ -45,7 +45,7 @@ func (n *node) insert(parttern string, parts []string, height int) {
 
 func (n *node) search(parts []string, height int) *node {
 	if len(parts) == height || strings.HasPrefix(n.part, "*") {
-		if n.parttern == "" {
+		if n.pattern == "" {
 			return nil
 		}
 		return n
