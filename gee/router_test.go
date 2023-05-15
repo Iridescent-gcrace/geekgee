@@ -1,6 +1,8 @@
-package gee_test
+package gee
 
-import(
+import (
+	"fmt"
+	"reflect"
 	"testing"
 )
 
