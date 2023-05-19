@@ -71,6 +71,7 @@ type Engine struct {
 	router       *router
 	groups       []*RouterGroup
 	funcMap      template.FuncMap
+	htmlTemplates *template.Template
 }
 
 func New() *Engine {
@@ -82,6 +83,10 @@ func New() *Engine {
 
 func (engine *Engine) SetFuncMap(funcMap template.FuncMap) {
 	engine.funcMap = funcMap
+}
+
+func (engine *Engine) LoadHTMLGlob(pattern string ){
+	engine.htmlTemplates = template.Must(template.New("").Funcs(engine.funcMap).ParseGlob(pattern))
 }
 
 func (e *Engine) addRouter(method string, pattern string, handler HandlerFunc) {
