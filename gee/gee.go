@@ -67,13 +67,17 @@ func (group *RouterGroup) Static(relativePath string, root string) {
 }
 
 type Engine struct {
-	*RouterGroup ///继承了全部属性
-	router       *router
-	groups       []*RouterGroup
-	funcMap      template.FuncMap
+	*RouterGroup  ///继承了全部属性
+	router        *router
+	groups        []*RouterGroup
+	funcMap       template.FuncMap
 	htmlTemplates *template.Template
 }
-
+func Default() *Engine {
+	engine := New()
+	engine.Use(Logger(), Recovery())
+	return engine
+}
 func New() *Engine {
 	engine := &Engine{router: newRouter()}
 	engine.RouterGroup = &RouterGroup{engine: engine}
@@ -85,7 +89,7 @@ func (engine *Engine) SetFuncMap(funcMap template.FuncMap) {
 	engine.funcMap = funcMap
 }
 
-func (engine *Engine) LoadHTMLGlob(pattern string ){
+func (engine *Engine) LoadHTMLGlob(pattern string) {
 	engine.htmlTemplates = template.Must(template.New("").Funcs(engine.funcMap).ParseGlob(pattern))
 }
 
@@ -115,6 +119,7 @@ func (e *Engine) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 	c := newContext(w, req)
 	c.handlers = middlewares
+	c.engine = e
 	e.router.handle(c)
 
 }
